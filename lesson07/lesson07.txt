@@ -1,0 +1,54 @@
+1. Найти и указать в проекте Front Controller и расписать классы, которые с ним взаимодействуют.
+
+Controller/MainController.php
+- View/main/index.html.php 
+
+Controller/OrderController.php
+- Service\Order\Basket.php
+- Service\Billing\Card.php
+- Service\Billing\IBilling
+-View/order/checkout.html.php
+- View/order/info.html.php
+
+Controller/ProductController.php
+- Service\Product\Product.php
+- Model\Repository\Product.php
+- Model\Entity\Product.php
+- View/product/info.html.php
+- View/product/list.html.php
+
+2. Найти в проекте паттерн Registry и объяснить, почему он был применён.
+
+В классе Product используется для получения всех продуктов.
+
+class Product
+{
+    /**
+     * Получаем информацию по конкретному продукту
+     *
+     * @param int $id
+     * @return Model\Entity\Product|null
+     */
+    public function getInfo(int $id): ?Model\Entity\Product
+    {
+        $product = $this->getProductRepository()->search([$id]);
+        return count($product) ? $product[0] : null;
+    }
+
+    /**
+     * Получаем все продукты
+     *
+     * @param string $sortType
+     *
+     * @return Model\Entity\Product[]
+     */
+    public function getAll(string $sortType): array
+    {
+        $productList = $this->getProductRepository()->fetchAll();
+
+        // Применить паттерн Стратегия
+        // $sortType === 'price'; // Сортировка по цене
+        // $sortType === 'name'; // Сортировка по имени
+
+        return $productList;
+    }
